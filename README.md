@@ -24,13 +24,13 @@ SingleSignOutHttpSessionListener
 ###配置文件说明
 
 	#cas client config
-	cas:
-	    server:
-	      login_url: http://172.16.14.238:9090/login
-	      url_prefix: http://172.16.14.238:9090/
-	
-	    service:
-	      server_name: http://localhost:8080
+    cas:
+        server:
+          login_url: http://your.cas.cerver:host/login
+          url_prefix: http://1your.cas.cerver:host/
+
+        service:
+          server_name: http://localhost:8080
 
 注意casServerLoginUrl指服务器的地址；而serverName指的是应用的地址
 
