@@ -14,7 +14,7 @@ import java.util.Map;
  */
 @RequestMapping("/springboot/cas/")
 @RestController
-public class userInfoController {
+public class UserInfoController {
 
     //用户信息获取测试接口
     @RequestMapping(value = "useinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

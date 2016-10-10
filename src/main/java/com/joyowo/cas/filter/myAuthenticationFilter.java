@@ -1,6 +1,8 @@
 package com.joyowo.cas.filter;
 
+import com.joyowo.cas.properties.CasFilterProperties;
 import org.jasig.cas.client.authentication.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.annotation.WebFilter;
@@ -10,17 +12,14 @@ import javax.servlet.annotation.WebFilter;
  * Define the protected urls of your application
  */
 @WebFilter(filterName="CAS Authentication Filter",urlPatterns="/*")
-public class myAuthenticationFilter extends AuthenticationFilter {
+public class MyAuthenticationFilter extends AuthenticationFilter {
 
-    @Value("${cas.service.server_name}")
-    private String serverName;
-
-    @Value("${cas.server.login_url}")
-    private String casServerLoginUrl;
+    @Autowired
+    CasFilterProperties casFilterProperties;
 
     public void init() {
-        super.setServerName(serverName);
-        super.setCasServerLoginUrl(casServerLoginUrl);
+        super.setServerName(casFilterProperties.getServerName());
+        super.setCasServerLoginUrl(casFilterProperties.getCasServerLoginUrl());
         super.init();
     }
 }

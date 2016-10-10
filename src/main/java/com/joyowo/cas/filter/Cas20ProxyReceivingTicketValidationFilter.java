@@ -1,5 +1,6 @@
 package com.joyowo.cas.filter;
 
+import com.joyowo.cas.properties.CasFilterProperties;
 import org.jasig.cas.client.Protocol;
 import org.jasig.cas.client.configuration.ConfigurationKeys;
 import org.jasig.cas.client.proxy.*;
@@ -7,6 +8,7 @@ import org.jasig.cas.client.ssl.HttpsURLConnectionFactory;
 import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.util.ReflectUtils;
 import org.jasig.cas.client.validation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.*;
@@ -22,11 +24,8 @@ import java.util.*;
  */
 @WebFilter(filterName="CAS Validation Filter",urlPatterns="*")
 public class Cas20ProxyReceivingTicketValidationFilter extends AbstractTicketValidationFilter {
-    @Value("${cas.server.url_prefix}")
-    private String serverUrlPrefix;
-
-    @Value("${cas.service.server_name}")
-    private String serverName;
+    @Autowired
+    CasFilterProperties casFilterProperties;
 
     private static final String[] RESERVED_INIT_PARAMS;
     private String proxyReceptorUrl;
@@ -74,7 +73,7 @@ public class Cas20ProxyReceivingTicketValidationFilter extends AbstractTicketVal
     }
 
     public void init() {
-        super.setServerName(serverName);
+        super.setServerName(casFilterProperties.getServerName());
         super.init();
         CommonUtils.assertNotNull(this.proxyGrantingTicketStorage, "proxyGrantingTicketStorage cannot be null.");
         if (this.timer == null) {
@@ -95,7 +94,7 @@ public class Cas20ProxyReceivingTicketValidationFilter extends AbstractTicketVal
     protected final TicketValidator getTicketValidator(FilterConfig filterConfig) {
         boolean allowAnyProxy = this.getBoolean(ConfigurationKeys.ACCEPT_ANY_PROXY);
         String allowedProxyChains = this.getString(ConfigurationKeys.ALLOWED_PROXY_CHAINS);
-        String casServerUrlPrefix = serverUrlPrefix;
+        String casServerUrlPrefix = casFilterProperties.getCasServerUrlPrefix();
         Class ticketValidatorClass = this.getClass(ConfigurationKeys.TICKET_VALIDATOR_CLASS);
         Object validator;
         if (!allowAnyProxy && !CommonUtils.isNotBlank(allowedProxyChains)) {

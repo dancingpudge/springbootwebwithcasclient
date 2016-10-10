@@ -1,9 +1,11 @@
 package com.joyowo.cas.filter;
 
+import com.joyowo.cas.properties.CasFilterProperties;
 import org.jasig.cas.client.configuration.ConfigurationKeys;
 import org.jasig.cas.client.session.SessionMappingStorage;
 import org.jasig.cas.client.session.SingleSignOutHandler;
 import org.jasig.cas.client.util.AbstractConfigurationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.*;
@@ -19,10 +21,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @WebFilter(filterName="CAS Single Sign Out Filter",urlPatterns="/*")
 public final class SingleSignOutFilter extends AbstractConfigurationFilter {
+    @Autowired
+    CasFilterProperties casFilterProperties;
+
     private static final SingleSignOutHandler HANDLER = new SingleSignOutHandler();
     private AtomicBoolean handlerInitialized = new AtomicBoolean(false);
-    @Value("${cas.server.url_prefix}")
-    private String urlPrefix;
 
     public SingleSignOutFilter() {
     }
@@ -34,7 +37,7 @@ public final class SingleSignOutFilter extends AbstractConfigurationFilter {
             this.setLogoutParameterName(this.getString(ConfigurationKeys.LOGOUT_PARAMETER_NAME));
             this.setFrontLogoutParameterName(this.getString(ConfigurationKeys.FRONT_LOGOUT_PARAMETER_NAME));
             this.setRelayStateParameterName(this.getString(ConfigurationKeys.RELAY_STATE_PARAMETER_NAME));
-            this.setCasServerUrlPrefix(urlPrefix);
+            this.setCasServerUrlPrefix(casFilterProperties.getCasServerUrlPrefix());
             HANDLER.setArtifactParameterOverPost(this.getBoolean(ConfigurationKeys.ARTIFACT_PARAMETER_OVER_POST));
             HANDLER.setEagerlyCreateSessions(this.getBoolean(ConfigurationKeys.EAGERLY_CREATE_SESSIONS));
         }
